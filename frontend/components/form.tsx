@@ -31,7 +31,7 @@ export default function Form({ type }: { type: "login" | "register" }) {
             }
           });
         } else {
-          fetch("/api/auth/register", {
+          fetch(`http://localhost:8080/users`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function Form({ type }: { type: "login" | "register" }) {
             }),
           }).then(async (res) => {
             setLoading(false);
-            if (res.status === 200) {
+            if (res.status === 201) {
               toast.success("Account created! Redirecting to login...");
               setTimeout(() => {
                 router.push("/login");
@@ -66,7 +66,7 @@ export default function Form({ type }: { type: "login" | "register" }) {
           id="email"
           name="email"
           type="email"
-          placeholder="panic@thedis.co"
+          placeholder="someemail@mail.com"
           autoComplete="email"
           required
           className="mt-1 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"

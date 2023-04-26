@@ -6,6 +6,7 @@ import AuthStatus from "@/components/auth-status";
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ['latin']
 });
 
 export default async function RootLayout({

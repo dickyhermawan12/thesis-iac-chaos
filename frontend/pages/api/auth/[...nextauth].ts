@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@/lib/prisma";
-import { compare } from "bcrypt";
+import axios from "axios";
 
 export default NextAuth({
   providers: [
@@ -13,21 +12,38 @@ export default NextAuth({
           email: string;
           password: string;
         };
-        if (!email || !password) {
-          throw new Error("Missing username or password");
-        }
-        const user = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-        });
-        // if user doesn't exist or password doesn't match
-        if (!user || !(await compare(password, user.password))) {
+
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/login",
+            {
+              email,
+              password,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          return res.data;
+        } catch (e) {
           throw new Error("Invalid username or password");
         }
-        return user;
       },
     }),
   ],
-  session: { strategy: "jwt" },
+  callbacks: {
+    async jwt({token, user}) {
+      if (user) {
+        token.accessToken = user.access_token;
+      }
+      return token;
+    },
+    async session({session, token}) {
+      session.accessToken = token.accessToken;
+      return session;
+    }
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 });
