@@ -15,7 +15,8 @@ class PostCreate(PostBase):
 
 
 class UserOut(BaseModel):
-    id: int
+    user_id: int
+    username: str
     email: EmailStr
     created_at: datetime
     updated_at: datetime
@@ -25,7 +26,7 @@ class UserOut(BaseModel):
 
 
 class Post(PostBase):
-    id: int
+    post_id: int
     created_at: datetime
     updated_at: datetime
     user_id: int
@@ -44,6 +45,7 @@ class PostOut(BaseModel):
 
 
 class UserCreate(BaseModel):
+    username: str
     email: EmailStr
     password: str
 
@@ -65,3 +67,7 @@ class TokenData(BaseModel):
 class Like(BaseModel):
     post_id: int
     dir: conint(le=1)
+
+
+class LikeCount(BaseModel):
+    count: int

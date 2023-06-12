@@ -14,7 +14,7 @@ router = APIRouter(prefix="/posts", tags=["Posts"])
 
 
 # Get all posts
-@router.get("/", response_model=List[schemas.PostOut])
+@router.get("/", response_model=list[schemas.PostOut])
 def get_posts(
     db: Session = Depends(get_db),
     limit: int = 10,
@@ -25,8 +25,8 @@ def get_posts(
     # Filter by search term, with pagination
     posts = (
         db.query(models.Post, func.count(models.Like.post_id).label("likes"))
-        .join(models.Like, models.Like.post_id == models.Post.id, isouter=True)
-        .group_by(models.Post.id)
+        .join(models.Like, models.Like.post_id == models.Post.post_id, isouter=True)
+        .group_by(models.Post.post_id)
         .filter(models.Post.title.contains(search))
         .limit(limit)
         .offset(skip)
@@ -34,6 +34,21 @@ def get_posts(
     )
 
     return posts
+
+
+# Create new post for testing (without authentication)
+@router.get("/test", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
+def create_posts_test(
+    id: int,
+    db: Session = Depends(get_db),
+):
+    post = dict(title="Test Post", body="Test Content", user_id=id)
+    new_post = models.Post(**post)
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
+
+    return new_post
 
 
 # Get post by id
@@ -45,9 +60,9 @@ def get_post(
     # Query for post with id, including number of likes
     post = (
         db.query(models.Post, func.count(models.Like.post_id).label("likes"))
-        .join(models.Like, models.Like.post_id == models.Post.id, isouter=True)
-        .group_by(models.Post.id)
-        .filter(models.Post.id == id)
+        .join(models.Like, models.Like.post_id == models.Post.post_id, isouter=True)
+        .group_by(models.Post.post_id)
+        .filter(models.Post.post_id == id)
         .first()
     )
 
@@ -72,7 +87,7 @@ def create_posts(
     current_user: int = Depends(oauth2.get_current_user),
 ):
     # Create new post
-    new_post = models.Post(user_id=current_user.id, **post.dict())
+    new_post = models.Post(user_id=current_user.user_id, **post.dict())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -92,7 +107,7 @@ def update_post(
     current_user: int = Depends(oauth2.get_current_user),
 ):
     # Query for post with id
-    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(models.Post).filter(models.Post.post_id == id)
 
     # Get first result
     post = post_query.first()
@@ -105,7 +120,7 @@ def update_post(
         )
 
     # If post exists, check if user is owner
-    if post.user_id != current_user.id:
+    if post.user_id != current_user.user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform requested action",
@@ -129,7 +144,7 @@ def delete_post(
     current_user: int = Depends(oauth2.get_current_user),
 ):
     # Query for post with id
-    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(models.Post).filter(models.Post.post_id == id)
 
     # Get first result
     post = post_query.first()
@@ -138,11 +153,11 @@ def delete_post(
     if post == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"post with id: {id} does not exist",
+            detail=f"Post with id: {id} does not exist",
         )
 
     # If post exists, check if user is owner
-    if post.user_id != current_user.id:
+    if post.user_id != current_user.user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform requested action",

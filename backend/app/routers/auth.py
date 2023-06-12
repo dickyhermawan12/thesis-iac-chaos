@@ -34,7 +34,7 @@ def login(
         )
 
     # If password is correct, create access token
-    access_token = oauth2.create_access_token(data={"user_id": user.id})
+    access_token = oauth2.create_access_token(data={"user_id": user.user_id})
 
     # Return access token
     return {"access_token": access_token, "token_type": "bearer"}

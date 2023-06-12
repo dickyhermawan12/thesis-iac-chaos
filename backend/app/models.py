@@ -9,7 +9,7 @@ from .database import Base
 class Post(Base):
     __tablename__ = "posts"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    post_id = Column(Integer, primary_key=True, nullable=False)
     title = Column(String(100), nullable=False)
     body = Column(Text, nullable=False)
     created_at = Column(
@@ -23,7 +23,7 @@ class Post(Base):
         server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
     )
     user_id = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        Integer, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False
     )
 
     user = relationship("User")
@@ -31,7 +31,8 @@ class Post(Base):
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, nullable=False)
+    user_id = Column(Integer, primary_key=True, nullable=False)
+    username = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
     created_at = Column(
@@ -49,10 +50,10 @@ class User(Base):
 class Like(Base):
     __tablename__ = "likes"
     user_id = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+        Integer, ForeignKey("users.user_id", ondelete="CASCADE"), primary_key=True
     )
     post_id = Column(
-        Integer, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True
+        Integer, ForeignKey("posts.post_id", ondelete="CASCADE"), primary_key=True
     )
     created_at = Column(
         TIMESTAMP(timezone=True),

@@ -1,26 +1,31 @@
-// These styles apply to every route in the application
-import "@/styles/globals.css";
-import { Inter } from "@next/font/google";
-import Toaster from "@/components/toaster";
-import AuthStatus from "@/components/auth-status";
+import "./globals.css";
+import { Inter } from "next/font/google";
+import Sidebar from "./sidebar";
+import { Toaster } from "react-hot-toast";
+import { NextAuthProvider } from "./providers";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ['latin']
-});
+const inter = Inter({ subsets: ["latin"] });
 
-export default async function RootLayout({
+export const metadata = {
+  title: "Microblog App",
+  description: "A microblogging app built with Next.js, FastAPI, and MySQL.",
+};
+
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const AuthStatusDiv = await AuthStatus();
   return (
     <html lang="en">
-      <body className={inter.variable}>
+      <body
+        className={`antialiased max-w-4xl mb-40 flex flex-col md:flex-row mx-4 mt-8 md:mt-20 lg:mt-32 lg:mx-auto ${inter.className} dark:bg-neutral-900 dark:text-neutral-200`}
+      >
         <Toaster />
-        {AuthStatusDiv}
-        {children}
+        <NextAuthProvider>
+          <Sidebar />
+          <main className="max-w-2xl">{children}</main>
+        </NextAuthProvider>
       </body>
     </html>
   );
