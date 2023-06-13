@@ -1,44 +1,48 @@
-resource "azurerm_mysql_server" "mysql_server" {
-  name                = "${var.prefix}-mysql-server"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
-  administrator_login          = var.mysql_db_username
-  administrator_login_password = var.mysql_db_password
-
-  sku_name   = "B_Gen5_1"
-  storage_mb = 5120
-  version    = "8.0"
-
-  auto_grow_enabled                 = false
-  backup_retention_days             = 7
-  geo_redundant_backup_enabled      = false
-  infrastructure_encryption_enabled = false
-  public_network_access_enabled     = true
-  ssl_enforcement_enabled           = false
-  ssl_minimal_tls_version_enforced  = "TLSEnforcementDisabled"
-  tags                              = var.tags
+resource "random_string" "name" {
+  length  = 4
+  lower   = true
+  numeric = false
+  special = false
+  upper   = false
 }
 
-resource "azurerm_mysql_database" "mysql_db" {
-  name                = "${var.prefix}-mysql-db"
+resource "azurerm_private_dns_zone" "private_dns_zone" {
+  name                = "${var.prefix}.mysql.database.azure.com"
   resource_group_name = var.resource_group_name
-  server_name         = azurerm_mysql_server.mysql_server.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_vnet_link" {
+  name                  = "mysqlfsVnetZone${random_string.name.result}.com"
+  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone.name
+  resource_group_name   = var.resource_group_name
+  virtual_network_id    = var.db_subnet_id
+}
+
+resource "azurerm_mysql_flexible_server" "db_mysql_server" {
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
+  name                         = "${var.prefix}-mysqlfs-${random_string.name.result}"
+  administrator_login          = var.mysql_db_username
+  administrator_password       = var.mysql_db_password
+  backup_retention_days        = 7
+  delegated_subnet_id          = var.db_subnet_id
+  geo_redundant_backup_enabled = false
+  private_dns_zone_id          = azurerm_private_dns_zone.private_dns_zone.id
+  sku_name                     = "B_Standard_B1s"
+  version                      = "8.0.21"
+
+  storage {
+    iops    = 360
+    size_gb = 20
+  }
+
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.private_dns_vnet_link]
+}
+
+resource "azurerm_mysql_flexible_database" "db_mysql_database" {
+  name                = var.mysql_db_schema
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.db_mysql_server.name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
-}
-
-resource "azurerm_mysql_firewall_rule" "mysql_fw_rule" {
-  name                = "allow-access-from-vnet"
-  resource_group_name = var.resource_group_name
-  server_name         = azurerm_mysql_server.mysql_server.name
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
-}
-
-resource "azurerm_mysql_virtual_network_rule" "mysql_virtual_network_rule" {
-  name                = "mysql-vnet-rule"
-  resource_group_name = var.resource_group_name
-  server_name         = azurerm_mysql_server.mysql_server.name
-  subnet_id           = var.db_subnet_id
 }

@@ -4,6 +4,11 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.59.0"
     }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.5.1"
+    }
   }
 
   backend "azurerm" {
@@ -125,4 +130,5 @@ module "db" {
   db_subnet_id        = module.vnet.db_subnet_id
   mysql_db_username   = var.mysql_db_username
   mysql_db_password   = var.mysql_db_password
+  mysql_db_schema     = var.mysql_db_schema
 }

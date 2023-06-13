@@ -22,7 +22,7 @@ resource "azurerm_network_interface" "jumpbox_nic" {
   tags = var.tags
 }
 
-resource "azurerm_linux_virtual_machine" "jumpbox-vm" {
+resource "azurerm_linux_virtual_machine" "jumpbox_vm" {
   name                  = "${var.prefix}-jumpbox-vm"
   location              = var.location
   resource_group_name   = var.resource_group_name

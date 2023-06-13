@@ -32,3 +32,8 @@ variable "mysql_db_password" {
   description = "Password for the MySQL database"
   type        = string
 }
+
+variable "mysql_db_schema" {
+  description = "Schema for the MySQL database"
+  type        = string
+}
