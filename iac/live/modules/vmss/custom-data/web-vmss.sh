@@ -1,17 +1,11 @@
 #!/bin/bash
 
 sudo apt update -y && sudo apt upgrade -y
-curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&
-  sudo apt-get install -y nodejs
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs
 
 cd ~
 git clone https://github.com/dickyhermawan12/thesis-iac-chaos.git codebase
 cd codebase/frontend
-
-if ! [ -x "$(command -v node)" ]; then
-  echo "Error: node is not installed." >&2
-  exit 1
-fi
 
 npm install
 npm run build

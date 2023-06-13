@@ -1,18 +1,10 @@
-resource "random_string" "name" {
-  length  = 4
-  lower   = true
-  numeric = false
-  special = false
-  upper   = false
-}
-
 resource "azurerm_private_dns_zone" "private_dns_zone" {
   name                = "${var.prefix}.mysql.database.azure.com"
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_vnet_link" {
-  name                  = "mysqlfsVnetZone${random_string.name.result}.com"
+  name                  = "mysqlfsVnetZone-iacthesis-db.com"
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone.name
   resource_group_name   = var.resource_group_name
   virtual_network_id    = var.virtual_network_id
@@ -21,7 +13,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_vnet_link"
 resource "azurerm_mysql_flexible_server" "db_mysql_server" {
   resource_group_name          = var.resource_group_name
   location                     = var.location
-  name                         = "${var.prefix}-mysqlfs-${random_string.name.result}"
+  name                         = "${var.prefix}-mysqlfs-db"
   administrator_login          = var.mysql_db_username
   administrator_password       = var.mysql_db_password
   backup_retention_days        = 7

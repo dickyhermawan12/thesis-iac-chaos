@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "jumpbox_public_ip" {
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
-  domain_name_label   = "iac-thesis-poc-jumpbox"
+  domain_name_label   = "iac-thesis-jumpbox"
   tags                = var.tags
 }
 

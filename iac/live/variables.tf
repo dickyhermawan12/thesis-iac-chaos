@@ -63,3 +63,13 @@ variable "mysql_db_schema" {
   description = "Azure MySQL Database Schema Name"
   type        = string
 }
+
+variable "web_source_image_id" {
+  description = "ID of the web source image"
+  type        = string
+}
+
+variable "app_source_image_id" {
+  description = "ID of the app source image"
+  type        = string
+}

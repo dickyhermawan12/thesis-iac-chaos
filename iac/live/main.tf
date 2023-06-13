@@ -107,6 +107,8 @@ module "vmss" {
   db_subnet_id                   = module.vnet.db_subnet_id
   web_lb_backend_address_pool_id = module.lb.web_lb_backend_address_pool_id
   app_lb_backend_address_pool_id = module.lb.app_lb_backend_address_pool_id
+  web_source_image_id            = var.web_source_image_id
+  app_source_image_id            = var.app_source_image_id
 }
 
 module "autoscale" {

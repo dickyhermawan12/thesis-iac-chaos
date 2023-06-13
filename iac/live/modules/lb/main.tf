@@ -6,7 +6,7 @@ resource "azurerm_public_ip" "web_lb_public_ip" {
   resource_group_name = var.resource_group_name
   sku                 = "Standard"
   allocation_method   = "Static"
-  domain_name_label   = "iac-thesis-poc"
+  domain_name_label   = "iac-thesis-microblog"
   tags                = var.tags
 }
 
