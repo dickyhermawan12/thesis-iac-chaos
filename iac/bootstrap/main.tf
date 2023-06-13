@@ -6,6 +6,7 @@ terraform {
     }
   }
 
+  # This block is specified after blob storage is created to store state remotely
   backend "azurerm" {
     resource_group_name  = "iac-thesis-rg"
     storage_account_name = "iacthesissa"
