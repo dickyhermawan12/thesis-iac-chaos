@@ -127,6 +127,7 @@ module "db" {
   tags                = var.tags
   location            = var.location
   resource_group_name = data.terraform_remote_state.bootstrap.outputs.resource_group_name
+  virtual_network_id  = module.vnet.virtual_network_id
   db_subnet_id        = module.vnet.db_subnet_id
   mysql_db_username   = var.mysql_db_username
   mysql_db_password   = var.mysql_db_password

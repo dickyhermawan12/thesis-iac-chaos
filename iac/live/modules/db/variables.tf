@@ -18,6 +18,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "virtual_network_id" {
+  description = "ID of the virtual network where the private dns zone vnet link will be deployed"
+  type        = string
+}
+
 variable "db_subnet_id" {
   description = "ID of the db subnet where the autoscaling settings will be applied"
   type        = string

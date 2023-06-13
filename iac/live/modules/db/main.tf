@@ -15,7 +15,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_vnet_link"
   name                  = "mysqlfsVnetZone${random_string.name.result}.com"
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone.name
   resource_group_name   = var.resource_group_name
-  virtual_network_id    = var.db_subnet_id
+  virtual_network_id    = var.virtual_network_id
 }
 
 resource "azurerm_mysql_flexible_server" "db_mysql_server" {
