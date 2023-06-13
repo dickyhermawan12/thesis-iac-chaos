@@ -11,12 +11,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
     public_key = file("${path.module}/../ssh-keys/iac-thesis.pub")
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
-  }
+  source_image_id = var.web_source_image_id
 
   os_disk {
     storage_account_type = "Standard_LRS"
@@ -37,8 +32,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
       load_balancer_backend_address_pool_ids = [var.web_lb_backend_address_pool_id]
     }
   }
-
-  custom_data = base64encode(file("${path.module}/custom-data/web-vmss.sh"))
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
@@ -54,12 +47,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
     public_key = file("${path.module}/../ssh-keys/iac-thesis.pub")
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
-  }
+  source_image_id = var.app_source_image_id
 
   os_disk {
     storage_account_type = "Standard_LRS"
@@ -80,6 +68,4 @@ resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
       load_balancer_backend_address_pool_ids = [var.app_lb_backend_address_pool_id]
     }
   }
-
-  custom_data = base64encode(file("${path.module}/custom-data/app-vmss.sh"))
 }

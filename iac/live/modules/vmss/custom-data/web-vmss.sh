@@ -17,7 +17,7 @@ npm install
 npm run build
 sudo npm install pm2@latest -g
 
-pm2 start npm --name "codebase" -- start
+pm2 start npm --name "microblog" -- start
 pm2 startup
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u dicky --hp /home/dicky
 pm2 save

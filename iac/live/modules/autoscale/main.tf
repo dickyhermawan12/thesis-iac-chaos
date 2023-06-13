@@ -1,17 +1,13 @@
 /*
-Resource: azurerm_monitor_autoscale_setting
 - Notification Block
 - Profile Block-1: Default Profile
   1. Capacity Block
   2. Percentage CPU Metric Rules
     1. Scale-Up Rule: Increase VMs by 1 when CPU usage is greater than 75%
-    2. Scale-In Rule: Decrease VMs by 1when CPU usage is lower than 25%
+    2. Scale-In Rule: Decrease VMs by 1 when CPU usage is lower than 25%
   3. Available Memory Bytes Metric Rules
-    1. Scale-Up Rule: Increase VMs by 1 when Available Memory Bytes is less than 1GB in bytes
-    2. Scale-In Rule: Decrease VMs by 1 when Available Memory Bytes is greater than 2GB in bytes
-  4. LB SYN Count Metric Rules (JUST FOR firing Scale-Up and Scale-In Events for Testing and also knowing in addition to current VMSS Resource, we can also create Autoscaling rules for VMSS based on other Resource usage like Load Balancer)
-    1. Scale-Up Rule: Increase VMs by 1 when LB SYN Count is greater than 10 Connections (Average)
-    2. Scale-Up Rule: Decrease VMs by 1 when LB SYN Count is less than 10 Connections (Average)
+    1. Scale-Up Rule: Increase VMs by 1 when Available Memory Bytes is less than 50 MB in bytes
+    2. Scale-In Rule: Decrease VMs by 1 when Available Memory Bytes is greater than 300 MB in bytes
 */
 
 resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
@@ -27,12 +23,7 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
       custom_emails                         = ["dickyrahmahermawan@gmail.com"]
     }
   }
-  ################################################################################
-  ################################################################################
-  #######################  Profile-1: Default Profile  ###########################
-  ################################################################################
-  ################################################################################
-  # Profile-1: Default Profile
+
   profile {
     name = "default"
     # Capacity Block
@@ -41,14 +32,14 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
       minimum = 1
       maximum = 2
     }
-    ###########  START: Percentage CPU Metric Rules  ###########
-    ## Scale-Out
+    # Percentage CPU Metric Rules
+    # Scale-Out
     rule {
       scale_action {
         direction = "Increase"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -64,13 +55,13 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
       }
     }
 
-    ## Scale-In
+    # Scale-In
     rule {
       scale_action {
         direction = "Decrease"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -85,16 +76,15 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
         threshold          = 25 # Decrease 1 VM when CPU usage is less than 25%
       }
     }
-    ###########  END: Percentage CPU Metric Rules   ###########
 
-    ###########  START: Available Memory Bytes Metric Rules  ###########
-    ## Scale-Out
+    # Available Memory Bytes Metric Rules
+    # Scale-Out
     rule {
       scale_action {
         direction = "Increase"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -106,17 +96,17 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
         time_window        = "PT5M"
         time_aggregation   = "Average"
         operator           = "LessThan"
-        threshold          = 1073741824 # Increase 1 VM when Memory In Bytes is less than 1GB
+        threshold          = 53687091 # Increase 1 VM when Memory In Bytes is less than 0.05 GB/ 50 MB
       }
     }
 
-    ## Scale-In
+    # Scale-In
     rule {
       scale_action {
         direction = "Decrease"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -128,10 +118,9 @@ resource "azurerm_monitor_autoscale_setting" "web_vmss_autoscale" {
         time_window        = "PT5M"
         time_aggregation   = "Average"
         operator           = "GreaterThan"
-        threshold          = 2147483648 # Decrease 1 VM when Memory In Bytes is Greater than 2GB
+        threshold          = 322122547 # Decrease 1 VM when Memory In Bytes is Greater than 0.3 GB/ 300 MB
       }
     }
-    ###########  END: Available Memory Bytes Metric Rules  ###########
   }
 }
 
@@ -148,12 +137,7 @@ resource "azurerm_monitor_autoscale_setting" "app_vmss_autoscale" {
       custom_emails                         = ["dickyrahmahermawan@gmail.com"]
     }
   }
-  ################################################################################
-  ################################################################################
-  #######################  Profile-1: Default Profile  ###########################
-  ################################################################################
-  ################################################################################
-  # Profile-1: Default Profile
+
   profile {
     name = "default"
     # Capacity Block
@@ -162,14 +146,14 @@ resource "azurerm_monitor_autoscale_setting" "app_vmss_autoscale" {
       minimum = 1
       maximum = 2
     }
-    ###########  START: Percentage CPU Metric Rules  ###########
-    ## Scale-Out
+    # Percentage CPU Metric Rules
+    # Scale-Out
     rule {
       scale_action {
         direction = "Increase"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -185,13 +169,13 @@ resource "azurerm_monitor_autoscale_setting" "app_vmss_autoscale" {
       }
     }
 
-    ## Scale-In
+    # Scale-In
     rule {
       scale_action {
         direction = "Decrease"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -206,16 +190,15 @@ resource "azurerm_monitor_autoscale_setting" "app_vmss_autoscale" {
         threshold          = 25 # Decrease 1 VM when CPU usage is less than 25%
       }
     }
-    ###########  END: Percentage CPU Metric Rules   ###########
 
-    ###########  START: Available Memory Bytes Metric Rules  ###########
-    ## Scale-Out
+    # Available Memory Bytes Metric Rules
+    # Scale-Out
     rule {
       scale_action {
         direction = "Increase"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -227,17 +210,17 @@ resource "azurerm_monitor_autoscale_setting" "app_vmss_autoscale" {
         time_window        = "PT5M"
         time_aggregation   = "Average"
         operator           = "LessThan"
-        threshold          = 1073741824 # Increase 1 VM when Memory In Bytes is less than 1GB
+        threshold          = 53687091 # Increase 1 VM when Memory In Bytes is less than 0.05 GB/ 50 MB
       }
     }
 
-    ## Scale-In
+    # Scale-In
     rule {
       scale_action {
         direction = "Decrease"
         type      = "ChangeCount"
         value     = 1
-        cooldown  = "PT5M"
+        cooldown  = "PT1M"
       }
 
       metric_trigger {
@@ -249,9 +232,8 @@ resource "azurerm_monitor_autoscale_setting" "app_vmss_autoscale" {
         time_window        = "PT5M"
         time_aggregation   = "Average"
         operator           = "GreaterThan"
-        threshold          = 2147483648 # Decrease 1 VM when Memory In Bytes is Greater than 2GB
+        threshold          = 322122547 # Decrease 1 VM when Memory In Bytes is Greater than 0.3 GB/ 300 MB
       }
     }
-    ###########  END: Available Memory Bytes Metric Rules  ###########
   }
 }

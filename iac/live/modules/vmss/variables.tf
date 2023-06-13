@@ -52,3 +52,13 @@ variable "app_lb_backend_address_pool_id" {
   description = "ID of the app LB backend pool where the VMSS will be deployed"
   type        = string
 }
+
+variable "web_source_image_id" {
+  description = "ID of the web source image"
+  type        = string
+}
+
+variable "app_source_image_id" {
+  description = "ID of the app source image"
+  type        = string
+}
