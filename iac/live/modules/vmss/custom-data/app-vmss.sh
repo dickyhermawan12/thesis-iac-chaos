@@ -1,13 +1,12 @@
 #!/bin/bash
 
 sudo apt update -y && sudo apt upgrade -y
-sudo apt install python3-dev default-libmysqlclient-dev build-essential
 
 cd ~
 git clone https://github.com/dickyhermawan12/thesis-iac-chaos.git codebase
 cd codebase/backend
 
-sudo apt install python3-pip python3-venv -y
+sudo apt install python3-pip python3-venv python3-dev default-libmysqlclient-dev build-essential -y
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
