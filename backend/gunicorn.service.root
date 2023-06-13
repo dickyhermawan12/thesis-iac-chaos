@@ -1,0 +1,13 @@
+[Unit]
+Description=miniapp api
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/codebase/backend/
+Environment="PATH=/root/codebase/backend/venv/bin"
+ExecStart=/root/codebase/backend/venv/bin/gunicorn -w 3 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000
+
+[Install]
+WantedBy=multi-user.target
