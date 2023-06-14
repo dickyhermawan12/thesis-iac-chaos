@@ -18,6 +18,16 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "agw_subnet_id" {
+  description = "ID of the application gateway subnet where the NSG will be deployed"
+  type        = string
+}
+
+variable "jumpbox_subnet_id" {
+  description = "ID of the jumpbox subnet where the NSG will be deployed"
+  type        = string
+}
+
 variable "web_subnet_id" {
   description = "ID of the web subnet where the NSG will be deployed"
   type        = string
@@ -33,9 +43,9 @@ variable "db_subnet_id" {
   type        = string
 }
 
-variable "jumpbox_subnet_id" {
-  description = "ID of the jumpbox subnet where the NSG will be deployed"
-  type        = string
+variable "agw_subnet_address" {
+  description = "Address spaces of the Subnet for application gateway"
+  type        = list(string)
 }
 
 variable "web_subnet_address" {

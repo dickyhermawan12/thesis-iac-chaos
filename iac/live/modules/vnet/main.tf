@@ -6,6 +6,20 @@ resource "azurerm_virtual_network" "vnet" {
   tags                = var.tags
 }
 
+resource "azurerm_subnet" "agw_subnet" {
+  name                 = "${var.prefix}-agw-subnet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = var.agw_subnet_address
+}
+
+resource "azurerm_subnet" "jumpbox_subnet" {
+  name                 = "${var.prefix}-jumpbox-subnet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = var.jumpbox_subnet_address
+}
+
 resource "azurerm_subnet" "web_subnet" {
   name                 = "${var.prefix}-web-subnet"
   resource_group_name  = var.resource_group_name
@@ -34,11 +48,4 @@ resource "azurerm_subnet" "db_subnet" {
       ]
     }
   }
-}
-
-resource "azurerm_subnet" "jumpbox_subnet" {
-  name                 = "${var.prefix}-jumpbox-subnet"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = var.jumpbox_subnet_address
 }

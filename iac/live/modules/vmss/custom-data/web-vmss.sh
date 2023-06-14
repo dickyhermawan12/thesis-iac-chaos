@@ -7,7 +7,7 @@ echo "===> Swapfile created" >~/log.txt
 cd ~
 git clone https://github.com/dickyhermawan12/thesis-iac-chaos.git codebase
 cd codebase/frontend
-echo "NEXT_PUBLIC_BACKEND_URL=http://10.1.2.100" >.env.local
+echo "NEXT_PUBLIC_BACKEND_URL=http://10.1.4.100" >.env.local
 echo "NEXTAUTH_SECRET=thesissecretkey" >>.env.local
 echo "===> Installing dependencies and building the app" >>~/log.txt
 npm install >~/trail.txt 2>&1
@@ -20,7 +20,7 @@ pm2 start npm --name "microblog" -- start >>~/trail.txt 2>&1
 pm2 startup >>~/trail.txt 2>&1
 pm2 save
 echo "===> Setup nginx" >>~/log.txt
-sed -i 's/BACKEND_IP_ADDRESS/10.1.2.100/g' ~/codebase/frontend/nginx.conf
+sed -i 's/BACKEND_IP_ADDRESS/10.1.4.100/g' ~/codebase/frontend/nginx.conf
 cp ~/codebase/frontend/nginx.conf /etc/nginx/sites-enabled/default
 systemctl restart nginx
 echo "===> Setup completed" >>~/log.txt

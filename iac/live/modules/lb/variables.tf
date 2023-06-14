@@ -38,6 +38,11 @@ variable "app_subnet_id" {
   type        = string
 }
 
+variable "agw_subnet_id" {
+  description = "ID of the agw subnet for the application gateway"
+  type        = string
+}
+
 variable "app_lb_private_ip" {
   description = "Private IP of the app LB"
   type        = string

@@ -23,6 +23,16 @@ variable "vnet_address_space" {
   type        = list(string)
 }
 
+variable "agw_subnet_address" {
+  description = "Address spaces of the Subnet for application gateway"
+  type        = list(string)
+}
+
+variable "jumpbox_subnet_address" {
+  description = "Address spaces of the Subnet for jumpbox/ bastion host"
+  type        = list(string)
+}
+
 variable "web_subnet_address" {
   description = "Address spaces of the Subnet for presentation/ web tier"
   type        = list(string)
@@ -35,11 +45,6 @@ variable "app_subnet_address" {
 
 variable "db_subnet_address" {
   description = "Address spaces of the Subnet for database tier"
-  type        = list(string)
-}
-
-variable "jumpbox_subnet_address" {
-  description = "Address spaces of the Subnet for jumpbox/ bastion host"
   type        = list(string)
 }
 

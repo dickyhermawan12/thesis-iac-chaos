@@ -19,6 +19,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
   }
 
   upgrade_mode = "Automatic"
+  vtpm_enabled = true
 
   network_interface {
     name                      = "web-vmss-nic"
@@ -26,10 +27,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
     network_security_group_id = var.web_nsg_id
 
     ip_configuration {
-      name                                   = "web-vmss-ip-config"
-      primary                                = true
-      subnet_id                              = var.web_subnet_id
-      load_balancer_backend_address_pool_ids = [var.web_lb_backend_address_pool_id]
+      name                                         = "web-vmss-ip-config"
+      primary                                      = true
+      subnet_id                                    = var.web_subnet_id
+      application_gateway_backend_address_pool_ids = [var.web_lb_backend_address_pool_id]
     }
   }
 
@@ -57,6 +58,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
   }
 
   upgrade_mode = "Automatic"
+  vtpm_enabled = true
 
   network_interface {
     name                      = "app-vmss-nic"
