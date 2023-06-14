@@ -32,6 +32,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
       load_balancer_backend_address_pool_ids = [var.web_lb_backend_address_pool_id]
     }
   }
+
+  custom_data = filebase64("${path.module}/custom-data/web-vmss.sh")
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
@@ -68,4 +70,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
       load_balancer_backend_address_pool_ids = [var.app_lb_backend_address_pool_id]
     }
   }
+
+  custom_data = filebase64("${path.module}/custom-data/app-vmss.sh")
 }
