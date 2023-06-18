@@ -37,11 +37,9 @@ echo "===> Setup gunicorn" >>~/log.txt
 pip install gunicorn httptools uvloop
 cp ~/codebase/backend/gunicorn.service.root /etc/systemd/system/gunicorn.service
 systemctl daemon-reload
-systemctl start gunicorn
+systemctl start --no-block gunicorn
 systemctl status gunicorn >>~/log.txt 2>&1
 systemctl enable gunicorn
-systemctl restart gunicorn
-systemctl status gunicorn >>~/log.txt 2>&1
 echo "===> Setup nginx" >>~/log.txt
 cp ~/codebase/backend/nginx.conf /etc/nginx/sites-enabled/default
 systemctl restart nginx
