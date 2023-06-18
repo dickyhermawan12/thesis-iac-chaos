@@ -8,7 +8,7 @@ from .routers import auth, users, posts, likes
 
 # models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 origins = ["*"]
 
