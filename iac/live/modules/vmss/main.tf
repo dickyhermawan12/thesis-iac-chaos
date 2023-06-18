@@ -8,7 +8,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
 
   admin_ssh_key {
     username   = "dicky"
-    public_key = file("${path.module}/../ssh-keys/iac-thesis.pub")
+    public_key = file("${path.root}/ssh-keys/iac-thesis.pub")
   }
 
   source_image_id = var.web_source_image_id
@@ -34,7 +34,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
     }
   }
 
-  custom_data = filebase64("${path.module}/custom-data/web-vmss.sh")
+  custom_data = filebase64("${path.root}/custom-data/web-vmss.sh")
+
+  tags = var.tags
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
@@ -47,7 +49,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
 
   admin_ssh_key {
     username   = "dicky"
-    public_key = file("${path.module}/../ssh-keys/iac-thesis.pub")
+    public_key = file("${path.root}/ssh-keys/iac-thesis.pub")
   }
 
   source_image_id = var.app_source_image_id
@@ -73,5 +75,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
     }
   }
 
-  custom_data = filebase64("${path.module}/custom-data/app-vmss.sh")
+  custom_data = filebase64("${path.root}/custom-data/app-vmss.sh")
+
+  tags = var.tags
 }

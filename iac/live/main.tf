@@ -89,15 +89,6 @@ module "natgw" {
   subnet_id           = module.vnet.app_subnet_id
 }
 
-module "jumpbox" {
-  source              = "./modules/jumpbox"
-  prefix              = var.prefix
-  tags                = var.tags
-  location            = var.location
-  resource_group_name = data.terraform_remote_state.bootstrap.outputs.resource_group_name
-  jumpbox_subnet_id   = module.vnet.jumpbox_subnet_id
-}
-
 module "db" {
   source              = "./modules/db"
   prefix              = var.prefix
@@ -109,6 +100,17 @@ module "db" {
   mysql_db_username   = var.mysql_db_username
   mysql_db_password   = var.mysql_db_password
   mysql_db_schema     = var.mysql_db_schema
+}
+
+module "jumpbox" {
+  source              = "./modules/jumpbox"
+  prefix              = var.prefix
+  tags                = var.tags
+  location            = var.location
+  resource_group_name = data.terraform_remote_state.bootstrap.outputs.resource_group_name
+  jumpbox_subnet_id   = module.vnet.jumpbox_subnet_id
+
+  depends_on = [module.db]
 }
 
 module "vmss" {
@@ -127,7 +129,7 @@ module "vmss" {
   web_source_image_id            = var.web_source_image_id
   app_source_image_id            = var.app_source_image_id
 
-  depends_on = [module.db]
+  depends_on = [module.jumpbox]
 }
 
 module "autoscale" {

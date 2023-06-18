@@ -32,7 +32,7 @@ resource "azurerm_linux_virtual_machine" "jumpbox_vm" {
 
   admin_ssh_key {
     username   = "dicky"
-    public_key = file("${path.module}/../ssh-keys/iac-thesis.pub")
+    public_key = file("${path.root}/ssh-keys/iac-thesis.pub")
   }
 
   source_image_reference {
@@ -46,6 +46,8 @@ resource "azurerm_linux_virtual_machine" "jumpbox_vm" {
     storage_account_type = "Standard_LRS"
     caching              = "ReadWrite"
   }
+
+  custom_data = filebase64("${path.root}/custom-data/jumpbox.sh")
 
   tags = var.tags
 }
