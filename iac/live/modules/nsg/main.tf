@@ -80,7 +80,7 @@ resource "azurerm_network_security_group" "web_nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
+    source_address_prefixes    = concat(var.agw_subnet_address, var.jumpbox_subnet_address)
     destination_address_prefix = "*"
   }
 
@@ -93,7 +93,7 @@ resource "azurerm_network_security_group" "web_nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefixes    = concat(var.agw_subnet_address, var.jumpbox_subnet_address)
+    source_address_prefixes    = var.jumpbox_subnet_address
     destination_address_prefix = "*"
   }
 
@@ -140,7 +140,7 @@ resource "azurerm_network_security_group" "db_nsg" {
   resource_group_name = var.resource_group_name
 
   security_rule {
-    name                       = "inbound-rule-HTTP"
+    name                       = "inbound-rule-MySQL"
     description                = "Inbound Rule"
     priority                   = 100
     direction                  = "Inbound"

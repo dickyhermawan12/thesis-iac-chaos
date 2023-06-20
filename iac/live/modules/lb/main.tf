@@ -108,7 +108,7 @@ resource "azurerm_application_gateway" "agw" {
   ssl_certificate {
     name     = local.ssl_certificate_name
     password = "iacthesis"
-    data     = filebase64("${path.root}/ssl-self-signed/httpd.pfx")
+    data     = filebase64("${path.root}/letsencrypt/iac-thesis-microblog.pfx")
   }
 
   # Listener on Port 443 (HTTPS)

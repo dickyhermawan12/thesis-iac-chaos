@@ -118,7 +118,7 @@ export default function Form({ type }: { type: "login" | "register" }) {
         {loading ? (
           <LoadingDots color="#808080" />
         ) : (
-          <p>{type === "login" ? "Sign In" : "Sign Up"}</p>
+          <p>{type === "login" ? "Log In" : "Register"}</p>
         )}
       </button>
       {type === "login" ? (
@@ -139,7 +139,7 @@ export default function Form({ type }: { type: "login" | "register" }) {
             href="/login"
             className="font-semibold text-gray-800 dark:text-gray-100 hover:underline"
           >
-            Sign in
+            Log In
           </Link>{" "}
           instead.
         </p>

@@ -34,7 +34,7 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, nullable=False)
     username = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
-    password = Column(String(255), nullable=False)
+    password = Column(String(60), nullable=False)
     created_at = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
