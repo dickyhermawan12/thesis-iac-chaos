@@ -48,6 +48,5 @@ resource "azurerm_linux_virtual_machine" "jumpbox_vm" {
   }
 
   custom_data = filebase64("${path.root}/custom-data/jumpbox.sh")
-
-  tags = var.tags
+  tags        = var.tags
 }

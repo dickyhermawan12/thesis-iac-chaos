@@ -1,6 +1,7 @@
 resource "azurerm_private_dns_zone" "private_dns_zone" {
   name                = "${var.prefix}.mysql.database.azure.com"
   resource_group_name = var.resource_group_name
+  tags                = var.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_vnet_link" {
@@ -22,6 +23,7 @@ resource "azurerm_mysql_flexible_server" "db_mysql_server" {
   private_dns_zone_id          = azurerm_private_dns_zone.private_dns_zone.id
   sku_name                     = "B_Standard_B1s"
   version                      = "8.0.21"
+  tags                         = var.tags
 
   storage {
     iops    = 360

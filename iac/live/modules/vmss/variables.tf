@@ -38,11 +38,6 @@ variable "app_subnet_id" {
   type        = string
 }
 
-variable "db_subnet_id" {
-  description = "ID of the db subnet where the VMSS will be deployed"
-  type        = string
-}
-
 variable "web_lb_backend_address_pool_id" {
   description = "ID of the web LB backend pool where the VMSS will be deployed"
   type        = string

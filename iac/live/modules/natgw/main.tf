@@ -4,6 +4,7 @@ resource "azurerm_public_ip" "natgw_public_ip" {
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
+  tags                = var.tags
 }
 
 resource "azurerm_nat_gateway" "natgw" {

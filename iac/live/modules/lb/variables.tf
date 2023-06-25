@@ -18,28 +18,13 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "web_nsg_id" {
-  description = "ID of the web NSG where the VMSS will be deployed"
-  type        = string
-}
-
-variable "app_nsg_id" {
-  description = "ID of the app NSG where the VMSS will be deployed"
-  type        = string
-}
-
-variable "web_subnet_id" {
-  description = "ID of the web subnet where the VMSS will be deployed"
+variable "agw_subnet_id" {
+  description = "ID of the agw subnet for the application gateway"
   type        = string
 }
 
 variable "app_subnet_id" {
   description = "ID of the app subnet where the VMSS will be deployed"
-  type        = string
-}
-
-variable "agw_subnet_id" {
-  description = "ID of the agw subnet for the application gateway"
   type        = string
 }
 

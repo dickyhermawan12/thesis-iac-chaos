@@ -4,11 +4,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.59.0"
     }
-
-    random = {
-      source  = "hashicorp/random"
-      version = "3.5.1"
-    }
   }
 
   backend "azurerm" {
@@ -62,7 +57,6 @@ module "nsg" {
   agw_subnet_address     = var.agw_subnet_address
   web_subnet_address     = var.web_subnet_address
   app_subnet_address     = var.app_subnet_address
-  db_subnet_address      = var.db_subnet_address
   jumpbox_subnet_address = var.jumpbox_subnet_address
 }
 
@@ -72,10 +66,7 @@ module "lb" {
   tags                = var.tags
   location            = var.location
   resource_group_name = data.terraform_remote_state.bootstrap.outputs.resource_group_name
-  web_nsg_id          = module.nsg.web_nsg_id
-  app_nsg_id          = module.nsg.app_nsg_id
   agw_subnet_id       = module.vnet.agw_subnet_id
-  web_subnet_id       = module.vnet.web_subnet_id
   app_subnet_id       = module.vnet.app_subnet_id
   app_lb_private_ip   = var.app_lb_private_ip
 }
@@ -123,7 +114,6 @@ module "vmss" {
   app_nsg_id                     = module.nsg.app_nsg_id
   web_subnet_id                  = module.vnet.web_subnet_id
   app_subnet_id                  = module.vnet.app_subnet_id
-  db_subnet_id                   = module.vnet.db_subnet_id
   web_lb_backend_address_pool_id = module.lb.agw_backend_address_pool_id
   app_lb_backend_address_pool_id = module.lb.app_lb_backend_address_pool_id
   web_source_image_id            = var.web_source_image_id
@@ -140,6 +130,4 @@ module "autoscale" {
   resource_group_name = data.terraform_remote_state.bootstrap.outputs.resource_group_name
   web_vmss_id         = module.vmss.web_vmss_id
   app_vmss_id         = module.vmss.app_vmss_id
-  web_subnet_id       = module.vnet.web_subnet_id
-  app_subnet_id       = module.vnet.app_subnet_id
 }

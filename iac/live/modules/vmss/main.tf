@@ -35,8 +35,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "web_vmss" {
   }
 
   custom_data = filebase64("${path.root}/custom-data/web-vmss.sh")
-
-  tags = var.tags
+  tags        = var.tags
 }
 
 resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
@@ -76,6 +75,5 @@ resource "azurerm_linux_virtual_machine_scale_set" "app_vmss" {
   }
 
   custom_data = filebase64("${path.root}/custom-data/app-vmss.sh")
-
-  tags = var.tags
+  tags        = var.tags
 }

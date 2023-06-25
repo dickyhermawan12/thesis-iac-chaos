@@ -58,11 +58,6 @@ variable "app_subnet_address" {
   type        = list(string)
 }
 
-variable "db_subnet_address" {
-  description = "Address spaces of the Subnet for database tier"
-  type        = list(string)
-}
-
 variable "jumpbox_subnet_address" {
   description = "Address spaces of the Subnet for jumpbox/ bastion host"
   type        = list(string)

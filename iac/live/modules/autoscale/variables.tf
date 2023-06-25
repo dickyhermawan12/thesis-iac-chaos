@@ -27,13 +27,3 @@ variable "app_vmss_id" {
   description = "ID of the app VMSS where the autoscaling settings will be applied"
   type        = string
 }
-
-variable "web_subnet_id" {
-  description = "ID of the web subnet where the autoscaling settings will be applied"
-  type        = string
-}
-
-variable "app_subnet_id" {
-  description = "ID of the app subnet where the autoscaling settings will be applied"
-  type        = string
-}
