@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "cy:run-junit": "cypress run --reporter junit --reporter-options 'mochaFile=results/junit-[hash].xml'",
+    "cy:merge-junit": "junit-merge --dir results --out results/junit.xml"
   },
   "dependencies": {
     "@types/node": "20.2.5",
@@ -19,6 +21,7 @@
     "clsx": "^1.2.1",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
+    "junit-merge": "^2.0.0",
     "jwt-decode": "^3.1.2",
     "next": "13.4.4",
     "next-auth": "^4.22.1",

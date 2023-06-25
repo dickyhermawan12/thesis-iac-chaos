@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="9.352" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2023-06-25T16:59:30" tests="0" file="cypress/e2e/st003_create_post.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="create post" timestamp="2023-06-25T16:59:30" tests="1" time="9.329" failures="0">
+    <testcase name="create post create new post" time="9.295" classname="create new post">
+    </testcase>
+  </testsuite>
+</testsuites>

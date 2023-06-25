@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<testsuites>
+<testsuite name="Root Suite" timestamp="2023-06-25T16:59:12" tests="0" file="cypress/e2e/st001_register.cy.ts" time="0.000" failures="0"></testsuite>
+<testsuite name="register" timestamp="2023-06-25T16:59:12" tests="2" time="8.000" failures="0">
+  
+  <testcase name="register register new user" time="7.096" classname="register new user"></testcase>
+  
+  <testcase name="register check db" time="0.887" classname="check db"></testcase>
+  
+</testsuite>
+
+<testsuite name="Root Suite" timestamp="2023-06-25T16:59:30" tests="0" file="cypress/e2e/st003_create_post.cy.ts" time="0.000" failures="0"></testsuite>
+<testsuite name="create post" timestamp="2023-06-25T16:59:30" tests="1" time="9.329" failures="0">
+  
+  <testcase name="create post create new post" time="9.295" classname="create new post"></testcase>
+  
+</testsuite>
+
+<testsuite name="Root Suite" timestamp="2023-06-25T17:00:14" tests="0" file="cypress/e2e/st006_like_post.cy.ts" time="0.000" failures="0"></testsuite>
+<testsuite name="like post" timestamp="2023-06-25T17:00:14" tests="1" time="13.661" failures="0">
+  
+  <testcase name="like post like existing post" time="13.625" classname="like existing post"></testcase>
+  
+</testsuite>
+
+<testsuite name="Root Suite" timestamp="2023-06-25T17:00:00" tests="0" file="cypress/e2e/st005_delete_post.cy.ts" time="0.000" failures="0"></testsuite>
+<testsuite name="delete post" timestamp="2023-06-25T17:00:00" tests="1" time="10.944" failures="0">
+  
+  <testcase name="delete post delete existing post" time="10.914" classname="delete existing post"></testcase>
+  
+</testsuite>
+
+<testsuite name="Root Suite" timestamp="2023-06-25T16:59:43" tests="0" file="cypress/e2e/st004_edit_post.cy.ts" time="0.000" failures="0"></testsuite>
+<testsuite name="edit post" timestamp="2023-06-25T16:59:43" tests="1" time="13.598" failures="0">
+  
+  <testcase name="edit post edit existing post" time="13.557" classname="edit existing post"></testcase>
+  
+</testsuite>
+
+<testsuite name="Root Suite" timestamp="2023-06-25T17:00:31" tests="0" file="cypress/e2e/st007_logout.cy.ts" time="0.000" failures="0"></testsuite>
+<testsuite name="logout" timestamp="2023-06-25T17:00:31" tests="1" time="6.192" failures="0">
+  
+  <testcase name="logout logout from session" time="6.193" classname="logout from session"></testcase>
+  
+</testsuite>
+
+<testsuite name="Root Suite" timestamp="2023-06-25T16:59:23" tests="0" file="cypress/e2e/st002_login.cy.ts" time="0.000" failures="0"></testsuite>
+<testsuite name="login" timestamp="2023-06-25T16:59:23" tests="1" time="4.128" failures="0">
+  
+  <testcase name="login login to account" time="4.104" classname="login to account"></testcase>
+  
+</testsuite>
+
+</testsuites>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="13.679" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2023-06-25T17:00:14" tests="0" file="cypress/e2e/st006_like_post.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="like post" timestamp="2023-06-25T17:00:14" tests="1" time="13.661" failures="0">
+    <testcase name="like post like existing post" time="13.625" classname="like existing post">
+    </testcase>
+  </testsuite>
+</testsuites>
