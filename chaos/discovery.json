@@ -1,0 +1,1701 @@
+{
+  "chaoslib_version": "1.35.1",
+  "id": "e0483b3d-ebb9-4d2e-943b-d30235018a4a",
+  "target": "azure",
+  "date": "2023-06-21T02:08:20.034625Z",
+  "platform": {
+    "system": "Linux",
+    "node": "Magnolia",
+    "release": "5.15.90.1-microsoft-standard-WSL2",
+    "version": "#1 SMP Fri Jan 27 02:56:13 UTC 2023",
+    "machine": "x86_64",
+    "proc": "x86_64",
+    "python": "3.10.11"
+  },
+  "extension": {
+    "name": "chaostoolkit-azure",
+    "version": "0.12.0"
+  },
+  "activities": [
+    {
+      "type": "action",
+      "name": "burn_io",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Increases the Disk I/O operations per second of the virtual machine.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\nduration : int, optional\n    How long the burn lasts. Defaults to 60 seconds.\ntimeout : int\n    Additional wait time (in seconds) for filling operation to be completed\n    Getting and sending data from/to Azure may take some time so it's not\n    recommended to set this value to less than 30s. Defaults to 60 seconds.\n\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> burn_io(\"where resourceGroup=='rg'\", configuration=c, secrets=s)\nIncrease the I/O operations per second of all machines from the group 'rg'\n\n>>> burn_io(\"where resourceGroup=='rg' and name='name'\",\n                configuration=c, secrets=s)\nIncrease the I/O operations per second of the machine from the group 'rg'\nhaving the name 'name'\n\n>>> burn_io(\"where resourceGroup=='rg' | sample 2\",\n                configuration=c, secrets=s)\nIncrease the I/O operations per second of two machines at random from\nthe group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_machines",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Delete virtual machines at random.\n\n**Be aware**: Deleting a machine is an invasive action. You will not be\nable to recover the machine once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_machines(\"where resourceGroup=='rg'\", c, s)\nDelete all machines from the group 'rg'\n\n>>> delete_machines(\"where resourceGroup=='rg' and name='name'\", c, s)\nDelete the machine from the group 'rg' having the name 'name'\n\n>>> delete_machines(\"where resourceGroup=='rg' | sample 2\", c, s)\nDelete two machines at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "fill_disk",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Fill the disk with random data.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\nduration : int, optional\n    Lifetime of the file created. Defaults to 120 seconds.\ntimeout : int\n    Additional wait time (in seconds)\n    for filling operation to be completed.\n    Getting and sending data from/to Azure may take some time so it's not\n    recommended to set this value to less than 30s. Defaults to 60 seconds.\nsize : int\n    Size of the file created on the disk. Defaults to 1GB.\npath : str, optional\n    The absolute path to write the fill file into.\n    Defaults: C:/burn for Windows clients, /root/burn for Linux clients.\n\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> fill_disk(\"where resourceGroup=='rg'\", configuration=c, secrets=s)\nFill all machines from the group 'rg'\n\n>>> fill_disk(\"where resourceGroup=='rg' and name='name'\",\n                configuration=c, secrets=s)\nFill the machine from the group 'rg' having the name 'name'\n\n>>> fill_disk(\"where resourceGroup=='rg' | sample 2\",\n                configuration=c, secrets=s)\nFill two machines at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 120,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "size",
+          "default": 1000,
+          "type": "integer"
+        },
+        {
+          "name": "path",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "network_latency",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Increases the response time of the virtual machine.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\nduration : int, optional\n    How long the latency lasts. Defaults to 60 seconds.\ntimeout : int\n    Additional wait time (in seconds) for filling operation to be completed\n    Getting and sending data from/to Azure may take some time so it's not\n    recommended to set this value to less than 30s. Defaults to 60 seconds.\ndelay : int\n    Added delay in ms. Defaults to 200.\njitter : int\n    Variance of the delay in ms. Defaults to 50.\n\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> network_latency(\"where resourceGroup=='rg'\", configuration=c,\n                secrets=s)\nIncrease the latency of all machines from the group 'rg'\n\n>>> network_latency(\"where resourceGroup=='rg' and name='name'\",\n                configuration=c, secrets=s)\nIncrease the latecy of the machine from the group 'rg' having the name\n'name'\n\n>>> network_latency(\"where resourceGroup=='rg' | sample 2\",\n                configuration=c, secrets=s)\nIncrease the latency of two machines at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "delay",
+          "default": 200,
+          "type": "integer"
+        },
+        {
+          "name": "jitter",
+          "default": 50,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "restart_machines",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Restart virtual machines at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> restart_machines(\"where resourceGroup=='rg'\", c, s)\nRestart all machines from the group 'rg'\n\n>>> restart_machines(\"where resourceGroup=='rg' and name='name'\", c, s)\nRestart the machine from the group 'rg' having the name 'name'\n\n>>> restart_machines(\"where resourceGroup=='rg' | sample 2\", c, s)\nRestart two machines at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "start_machines",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Start virtual machines at random. Thought as a rollback action.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> start_machines(\"where resourceGroup=='rg'\", c, s)\nStart all stopped machines from the group 'rg'\n\n>>> start_machines(\"where resourceGroup=='rg' and name='name'\", c, s)\nStart the stopped machine from the group 'rg' having the name 'name'\n\n>>> start_machines(\"where resourceGroup=='rg' | sample 2\", c, s)\nStart two stopped machines at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stop_machines",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Stop virtual machines at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> stop_machines(\"where resourceGroup=='rg'\", c, s)\nStop all machines from the group 'rg'\n\n>>> stop_machines(\"where resourceGroup=='mygroup' and name='myname'\", c, s)\nStop the machine from the group 'mygroup' having the name 'myname'\n\n>>> stop_machines(\"where resourceGroup=='mygroup' | sample 2\", c, s)\nStop two machines at random from the group 'mygroup'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stress_cpu",
+      "mod": "chaosazure.machine.actions",
+      "doc": "Stress CPU up to 100% at virtual machines.\n\nParameters\n----------\nfilter : str, optional\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected as potential chaos candidates.\nduration : int, optional\n    Duration of the stress test (in seconds) that generates high CPU usage.\n    Defaults to 120 seconds.\ntimeout : int\n    Additional wait time (in seconds) for stress operation to be completed.\n    Getting and sending data from/to Azure may take some time so it's not\n    recommended to set this value to less than 30s. Defaults to 60 seconds.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> stress_cpu(\"where resourceGroup=='rg'\", configuration=c, secrets=s)\nStress all machines from the group 'rg'\n\n>>> stress_cpu(\"where resourceGroup=='rg' and name='name'\",\n                configuration=c, secrets=s)\nStress the machine from the group 'rg' having the name 'name'\n\n>>> stress_cpu(\"where resourceGroup=='rg' | sample 2\",\n                configuration=c, secrets=s)\nStress two machines at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 120,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "count_machines",
+      "mod": "chaosazure.machine.probes",
+      "doc": "Return count of Azure virtual machines.\n\nParameters\n----------\nfilter : str\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "describe_machines",
+      "mod": "chaosazure.machine.probes",
+      "doc": "Describe Azure virtual machines.\n\nParameters\n----------\nfilter : str\n    Filter the virtual machines. If the filter is omitted all machines in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_managed_clusters",
+      "mod": "chaosazure.aks.actions",
+      "doc": "Delete a managed cluster at random from a managed Azure Kubernetes Service.\n\n**Be aware**: Deleting a managed cluster is an invasive action. You will not be\nable to recover the managed cluster once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the managed cluster. If the filter is omitted all managed cluster in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_managed_cluster(\"where resourceGroup=='rg'\", c, s)\nStop all managed clusters from the group 'rg'\n\n>>> delete_managed_cluster(\"where resourceGroup=='rg' and name='name'\", c, s)\nStop the managed cluster from the group 'rg' having the name 'name'\n\n>>> delete_managed_cluster(\"where resourceGroup=='rg' | sample 2\", c, s)\nStop two managed clusters at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_node",
+      "mod": "chaosazure.aks.actions",
+      "doc": "Delete a node at random from a managed Azure Kubernetes Service.\n\n**Be aware**: Deleting a node is an invasive action. You will not be able\nto recover the node once you deleted it.\n\nParameters\n----------\nfilter : str\n    Filter the managed AKS. If the filter is omitted all AKS in\n    the subscription will be selected as potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "restart_node",
+      "mod": "chaosazure.aks.actions",
+      "doc": "Restart a node at random from a managed Azure Kubernetes Service.\n\nParameters\n----------\nfilter : str\n    Filter the managed AKS. If the filter is omitted all AKS in\n    the subscription will be selected as potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "start_managed_clusters",
+      "mod": "chaosazure.aks.actions",
+      "doc": "Start managed cluster at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the managed cluster. If the filter is omitted all managed cluster in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> start_managed_cluster(\"where resourceGroup=='rg'\", c, s)\nStop all managed clusters from the group 'rg'\n\n>>> start_managed_cluster(\"where resourceGroup=='rg' and name='name'\", c, s)\nStop the managed cluster from the group 'rg' having the name 'name'\n\n>>> start_managed_cluster(\"where resourceGroup=='rg' | sample 2\", c, s)\nStop two managed clusters at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stop_managed_clusters",
+      "mod": "chaosazure.aks.actions",
+      "doc": "Stop managed cluster at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the managed cluster. If the filter is omitted all managed cluster in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> stop_managed_cluster(\"where resourceGroup=='rg'\", c, s)\nStop all managed clusters from the group 'rg'\n\n>>> stop_managed_cluster(\"where resourceGroup=='rg' and name='name'\", c, s)\nStop the managed cluster from the group 'rg' having the name 'name'\n\n>>> stop_managed_cluster(\"where resourceGroup=='rg' | sample 2\", c, s)\nStop two managed clusters at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stop_node",
+      "mod": "chaosazure.aks.actions",
+      "doc": "Stop a node at random from a managed Azure Kubernetes Service.\n\nParameters\n----------\nfilter : str\n    Filter the managed AKS. If the filter is omitted all AKS in\n    the subscription will be selected as potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "count_managed_clusters",
+      "mod": "chaosazure.aks.probes",
+      "doc": "Return count of Azure managed cluster.\n\nParameters\n----------\nfilter : str\n    Filter the managed cluster. If the filter is omitted all managed_clusters in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "describe_managed_clusters",
+      "mod": "chaosazure.aks.probes",
+      "doc": "Describe Azure managed cluster.\n\nParameters\n----------\nfilter : str\n    Filter the managed cluster. If the filter is omitted all managed cluster in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "burn_io",
+      "mod": "chaosazure.vmss.actions",
+      "doc": "Increases the Disk I/O operations per second of the VMSS machine.\nSimilar to the burn_io action of the machine.actions module.",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "deallocate_vmss",
+      "mod": "chaosazure.vmss.actions",
+      "doc": "Deallocate a virtual machine scale set instance at random.\n Parameters\n----------\nfilter : str\n    Filter the virtual machine scale set. If the filter is omitted all\n    virtual machine scale sets in the subscription will be selected as\n    potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_vmss",
+      "mod": "chaosazure.vmss.actions",
+      "doc": "Delete a virtual machine scale set instance at random.\n\n**Be aware**: Deleting a VMSS instance is an invasive action. You will not\nbe able to recover the VMSS instance once you deleted it.\n\n Parameters\n----------\nfilter : str\n    Filter the virtual machine scale set. If the filter is omitted all\n    virtual machine scale sets in the subscription will be selected as\n    potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "fill_disk",
+      "mod": "chaosazure.vmss.actions",
+      "doc": "Fill the VMSS machine disk with random data. Similar to\nthe fill_disk action of the machine.actions module.",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 120,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "size",
+          "default": 1000,
+          "type": "integer"
+        },
+        {
+          "name": "path",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "network_latency",
+      "mod": "chaosazure.vmss.actions",
+      "doc": "Increases the response time of the virtual machine. Similar to\nthe network_latency action of the machine.actions module.",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "delay",
+          "default": 200,
+          "type": "integer"
+        },
+        {
+          "name": "jitter",
+          "default": 50,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "restart_vmss",
+      "mod": "chaosazure.vmss.actions",
+      "doc": "Restart a virtual machine scale set instance at random.\n Parameters\n----------\nfilter : str\n    Filter the virtual machine scale set. If the filter is omitted all\n    virtual machine scale sets in the subscription will be selected as\n    potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stop_vmss",
+      "mod": "chaosazure.vmss.actions",
+      "doc": "Stops instances from the filtered scale set either at random or by\n a defined instance criteria.\n Parameters\n----------\nfilter : str\n    Filter the virtual machine scale set. If the filter is omitted all\n    virtual machine scale sets in the subscription will be selected as\n    potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'\ninstance_criteria :  Iterable[Mapping[str, any]]\n    Allows specification of criteria for selection of a given virtual\n    machine scale set instance. If the instance_criteria is omitted,\n    an instance will be chosen at random. All of the criteria within each\n    item of the Iterable must match, i.e. AND logic is applied.\n    The first item with all matching criterion will be used to select the\n    instance.\n    Criteria example:\n    [\n     {\"name\": \"myVMSSInstance1\"},\n     {\n      \"name\": \"myVMSSInstance2\",\n      \"instanceId\": \"2\"\n     }\n     {\"instanceId\": \"3\"},\n    ]\n    If the instances include two items. One with name = myVMSSInstance4\n    and instanceId = 2. The other with name = myVMSSInstance2 and\n    instanceId = 3. The criteria {\"instanceId\": \"3\"} will be the first\n    match since both the name and the instanceId did not match on the\n    first criteria.",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stress_vmss_instance_cpu",
+      "mod": "chaosazure.vmss.actions",
+      "doc": null,
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "default": 120,
+          "type": "integer"
+        },
+        {
+          "name": "timeout",
+          "default": 60,
+          "type": "integer"
+        },
+        {
+          "name": "instance_criteria",
+          "default": null,
+          "type": "object"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_webapp",
+      "mod": "chaosazure.webapp.actions",
+      "doc": "Delete a web app at random.\n\n***Be aware**: Deleting a web app is an invasive action. You will not be\nable to recover the web app once you deleted it.\n\nParameters\n----------\nfilter : str\n    Filter the web apps. If the filter is omitted all web apps in\n    the subscription will be selected as potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "restart_webapp",
+      "mod": "chaosazure.webapp.actions",
+      "doc": "Restart a web app at random.\n\nParameters\n----------\nfilter : str\n    Filter the web apps. If the filter is omitted all web apps in\n    the subscription will be selected as potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "start_webapp",
+      "mod": "chaosazure.webapp.actions",
+      "doc": "Start a web app at random.\n\nParameters\n----------\nfilter : str\n    Filter the web apps. If the filter is omitted all web apps in\n    the subscription will be selected as potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stop_webapp",
+      "mod": "chaosazure.webapp.actions",
+      "doc": "Stop a web app at random.\n\nParameters\n----------\nfilter : str\n    Filter the web apps. If the filter is omitted all web apps in\n    the subscription will be selected as potential chaos candidates.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "create_databases",
+      "mod": "chaosazure.postgresql_flexible.actions",
+      "doc": "Delete databases at random.\n\n**Be aware**: Deleting a database is an invasive action. You will not be\nable to recover the database once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all databases\n    of all servers in the subscription will be selected\n    as potential chaos candidates.\n\nname : str, required\n    The name of the database to create.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> create_databases(\"where resourceGroup=='rg'\", 'chaos-test', c, s)\nCreating database named 'chaos-test' in all servers from the group 'rg'\n\n>>> create_databases(\"where resourceGroup=='rg' and name='name'\", 'chaos-test', c, s)\nCreating database named 'chaos-test' the server from the group 'rg' having the name 'name'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "charset",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "collation",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_databases",
+      "mod": "chaosazure.postgresql_flexible.actions",
+      "doc": "Delete databases at random.\n\n**Be aware**: Deleting a database is an invasive action. You will not be\nable to recover the database once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all databases\n    of all servers in the subscription will be selected\n    as potential chaos candidates.\n\nname_pattern : str, optional\n    Filter the databases. If the filter is omitted all databases in\n    the server will be selected for the probe.\n    Pattern example:\n    'app[0-9]{3}'\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_databases(\"where resourceGroup=='rg'\", 'chaos-*', c, s)\nDelete all database named 'chaos-*' in all servers from the group 'rg'\n\n>>> delete_databases(\"where resourceGroup=='rg' and name='name'\", 'chaos-test', c, s)\nDelete all database named 'chaos-*' the server from the group 'rg' having the name 'name'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name_pattern",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_servers",
+      "mod": "chaosazure.postgresql_flexible.actions",
+      "doc": "Delete servers at random.\n\n**Be aware**: Deleting a server is an invasive action. You will not be\nable to recover the server once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_servers(\"where resourceGroup=='rg'\", c, s)\nDelete all servers from the group 'rg'\n\n>>> delete_servers(\"where resourceGroup=='rg' and name='name'\", c, s)\nDelete the server from the group 'rg' having the name 'name'\n\n>>> delete_servers(\"where resourceGroup=='rg' | sample 2\", c, s)\nDelete two servers at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_tables",
+      "mod": "chaosazure.postgresql_flexible.actions",
+      "doc": "Delete a table randomly from all databases in servers matching the filter.\nCould be used to introduce random failures for resilience testing.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted, all servers in the\n    subscription will be considered for potential table deletion.\ntable_name : str, optional\n    Specific table name to delete. If this is omitted, a table will be\n    selected randomly for deletion.\ndatabase_name : str, optional\n    Specific database name to delete the table from. If this is omitted,\n    a database will be selected randomly from the server for table deletion.\nconfiguration : Configuration, optional\n    Azure configuration information.\nsecrets : Secrets, optional\n    Azure secret information for authentication.\nkey_vault_url : str, optional\n    The URL to the Azure Key Vault where the secrets are stored.\n\nExamples\n--------\nHere are some examples of calling `delete_tables`.\n\n>>> delete_tables(\"where resourceGroup=='rg'\", \"users\", \"mydatabase\",\n                  c, s, \"https://myvault.vault.azure.net/\")\nDeletes the table 'users' from the database 'mydatabase' in all servers\nin the resource group 'rg'\n\n>>> delete_tables(\"where resourceGroup=='rg' and name='name'\", None, None,\n                  c, s, \"https://myvault.vault.azure.net/\")\nDeletes a random table from a random database in the server named 'name'\nin the resource group 'rg'\n\n>>> delete_tables(\"where resourceGroup=='rg' | sample 2\", \"orders\",\n                  \"mydatabase\", c, s, \"https://myvault.vault.azure.net/\")\nDeletes the table 'orders' from the database 'mydatabase' in two random\nservers in the resource group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "table_name",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "database_name",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "key_vault_url",
+          "default": null,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "restart_servers",
+      "mod": "chaosazure.postgresql_flexible.actions",
+      "doc": "Restart servers at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> restart_servers(\"where resourceGroup=='rg'\", c, s)\nRestart all servers from the group 'rg'\n\n>>> restart_servers(\"where resourceGroup=='rg' and name='name'\", c, s)\nRestart the server from the group 'rg' having the name 'name'\n\n>>> restart_servers(\"where resourceGroup=='rg' | sample 2\", c, s)\nRestart two servers at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "start_servers",
+      "mod": "chaosazure.postgresql_flexible.actions",
+      "doc": "Start servers at random. Thought as a rollback action.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> start_servers(\"where resourceGroup=='rg'\", c, s)\nStart all stopped servers from the group 'rg'\n\n>>> start_servers(\"where resourceGroup=='rg' and name='name'\", c, s)\nStart the stopped server from the group 'rg' having the name 'name'\n\n>>> start_servers(\"where resourceGroup=='rg' | sample 2\", c, s)\nStart two stopped servers at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stop_servers",
+      "mod": "chaosazure.postgresql_flexible.actions",
+      "doc": "Stop servers at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> stop_servers(\"where resourceGroup=='rg'\", c, s)\nStop all servers from the group 'rg'\n\n>>> stop_servers(\"where resourceGroup=='mygroup' and name='myname'\", c, s)\nStop the server from the group 'mygroup' having the name 'myname'\n\n>>> stop_servers(\"where resourceGroup=='mygroup' | sample 2\", c, s)\nStop two servers at random from the group 'mygroup'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "count_servers",
+      "mod": "chaosazure.postgresql_flexible.probes",
+      "doc": "Return count of Azure servers.\n\nParameters\n----------\nfilter : str\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "describe_databases",
+      "mod": "chaosazure.postgresql_flexible.probes",
+      "doc": "Describe Azure servers.\n\nParameters\n----------\nfilter : str\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'\nname_pattern : str\n    Filter the databases. If the filter is omitted all databases in\n    the server will be selected for the probe.\n    Pattern example:\n    'app[0-9]{3}'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name_pattern",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "describe_servers",
+      "mod": "chaosazure.postgresql_flexible.probes",
+      "doc": "Describe Azure servers.\n\nParameters\n----------\nfilter : str\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_application_gateways",
+      "mod": "chaosazure.application_gateway.actions",
+      "doc": "Delete application gateways at random.\n\n**Be aware**: Deleting an application gateway is an invasive action. You will not be\nable to recover the application gateway once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the application gateways. If the filter is omitted all application gateways in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_application_gateways(\"where resourceGroup=='rg'\", c, s)\nDelete all application_gateways from the group 'rg'\n\n>>> delete_application_gateways(\"where resourceGroup=='rg' and name='name'\", c, s)\nDelete the application gateway from the group 'rg' having the name 'name'\n\n>>> delete_application_gateways(\"where resourceGroup=='rg' | sample 2\", c, s)\nDelete two application_gateways at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_routes",
+      "mod": "chaosazure.application_gateway.actions",
+      "doc": "Delete routes at random.\n**Be aware**: Deleting a route is an invasive action. You will not be\nable to recover the route once you deleted it.\nParameters\n----------\nfilter : str, optional\n    Filter the application gateways. If the filter is omitted all routes\n    of all application gateways in the subscription will be selected\n    as potential chaos candidates.\nname_pattern : str, optional\n    Filter the routes. If the filter is omitted all routes except the first in\n    the server will be selected for the probe.\n    Pattern example:\n    'app[0-9]{3}'\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n>>> delete_routes(\"where resourceGroup=='rg'\", 'chaos-*', c, s)\nDelete all route named 'chaos-*' in all application gateways from the group 'rg'\n>>> delete_routes(\"where resourceGroup=='rg' and name='name'\", 'chaos-test', c, s)\nDelete all route named 'chaos-*' the server from the group 'rg' having the name 'name'\n\nIf all routes are deleted the first will be kept",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name_pattern",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "start_application_gateways",
+      "mod": "chaosazure.application_gateway.actions",
+      "doc": "Start application gateway at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the application gateway. If the filter is omitted all application gateway in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> start_application_gateways(\"where resourceGroup=='rg'\", c, s)\nStart all application gateways from the group 'rg'\n\n>>> start_application_gateways(\"where resourceGroup=='rg' and name='name'\", c, s)\nStart the application gateway from the group 'rg' having the name 'name'\n\n>>> start_application_gateways(\"where resourceGroup=='rg' | sample 2\", c, s)\nStart two application gateways at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "stop_application_gateways",
+      "mod": "chaosazure.application_gateway.actions",
+      "doc": "Stop application gateways at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the application gateways. If the filter is omitted all application gateways\n    in the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> stop_application_gateways(\"where resourceGroup=='rg'\", c, s)\nStop all application gateways from the group 'rg'\n\n>>> stop_application_gateways(\"where resourceGroup=='rg' and name='name'\", c, s)\nStop the application gateway from the group 'rg' having the name 'name'\n\n>>> stop_application_gateways(\"where resourceGroup=='rg' | sample 2\", c, s)\nStop two application gateways at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "count_application_gateways",
+      "mod": "chaosazure.application_gateway.probes",
+      "doc": "Return count of Azure application gateways.\n\nParameters\n----------\nfilter : str\n    Filter the application gateways. If the filter is omitted all application_gateways in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "describe_application_gateways",
+      "mod": "chaosazure.application_gateway.probes",
+      "doc": "Describe Azure application gateways.\n\nParameters\n----------\nfilter : str\n    Filter the application gateways. If the filter is omitted all application gateways in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "describe_routes",
+      "mod": "chaosazure.application_gateway.probes",
+      "doc": "Describe Azure application gateways routes.\n\nParameters\n----------\nfilter : str\n    Filter the application_gateways. If the filter is omitted all application gateways in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'\nname_pattern : str\n    Filter the routes. If the filter is omitted all routes in\n    the server will be selected for the probe.\n    Pattern example:\n    'app[0-9]{3}'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name_pattern",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "create_databases",
+      "mod": "chaosazure.postgresql.actions",
+      "doc": "Delete databases at random.\n\n**Be aware**: Deleting a database is an invasive action. You will not be\nable to recover the database once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all databases\n    of all servers in the subscription will be selected\n    as potential chaos candidates.\n\nname : str, required\n    The name of the database to create.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> create_databases(\"where resourceGroup=='rg'\", 'chaos-test', c, s)\nCreating database named 'chaos-test' in all servers from the group 'rg'\n\n>>> create_databases(\"where resourceGroup=='rg' and name='name'\", 'chaos-test', c, s)\nCreating database named 'chaos-test' the server from the group 'rg' having the name 'name'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "charset",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "collation",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_databases",
+      "mod": "chaosazure.postgresql.actions",
+      "doc": "Delete databases at random.\n\n**Be aware**: Deleting a database is an invasive action. You will not be\nable to recover the database once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all databases\n    of all servers in the subscription will be selected\n    as potential chaos candidates.\n\nname_pattern : str, optional\n    Filter the databases. If the filter is omitted all databases in\n    the server will be selected for the probe.\n    Pattern example:\n    'app[0-9]{3}'\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_databases(\"where resourceGroup=='rg'\", 'chaos-*', c, s)\nDelete all database named 'chaos-*' in all servers from the group 'rg'\n\n>>> delete_databases(\"where resourceGroup=='rg' and name='name'\", 'chaos-test', c, s)\nDelete all database named 'chaos-*' the server from the group 'rg' having the name 'name'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name_pattern",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_servers",
+      "mod": "chaosazure.postgresql.actions",
+      "doc": "Delete servers at random.\n\n**Be aware**: Deleting a server is an invasive action. You will not be\nable to recover the server once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_servers(\"where resourceGroup=='rg'\", c, s)\nDelete all servers from the group 'rg'\n\n>>> delete_servers(\"where resourceGroup=='rg' and name='name'\", c, s)\nDelete the server from the group 'rg' having the name 'name'\n\n>>> delete_servers(\"where resourceGroup=='rg' | sample 2\", c, s)\nDelete two servers at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "restart_servers",
+      "mod": "chaosazure.postgresql.actions",
+      "doc": "Restart servers at random.\n\nParameters\n----------\nfilter : str, optional\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> restart_servers(\"where resourceGroup=='rg'\", c, s)\nRestart all servers from the group 'rg'\n\n>>> restart_servers(\"where resourceGroup=='rg' and name='name'\", c, s)\nRestart the server from the group 'rg' having the name 'name'\n\n>>> restart_servers(\"where resourceGroup=='rg' | sample 2\", c, s)\nRestart two servers at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "count_servers",
+      "mod": "chaosazure.postgresql.probes",
+      "doc": "Return count of Azure servers.\n\nParameters\n----------\nfilter : str\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "describe_databases",
+      "mod": "chaosazure.postgresql.probes",
+      "doc": "Describe Azure servers.\n\nParameters\n----------\nfilter : str\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'\nname_pattern : str\n    Filter the databases. If the filter is omitted all databases in\n    the server will be selected for the probe.\n    Pattern example:\n    'app[0-9]{3}'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name_pattern",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "describe_servers",
+      "mod": "chaosazure.postgresql.probes",
+      "doc": "Describe Azure servers.\n\nParameters\n----------\nfilter : str\n    Filter the servers. If the filter is omitted all servers in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_netapp_volumes",
+      "mod": "chaosazure.netapp.actions",
+      "doc": "Delete netapp volumes at random.\n\n**Be aware**: Deleting a netapp volume is a invasive action. You will not be\nable to recover the netapp volume once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the netapp volumes. If the filter is omitted all netapp volumes in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_netapp_volumes(\"where resourceGroup=='rg'\", c, s)\nDelete all netapp volumes from the group 'rg'\n\n>>> delete_netapp_volumes(\"where resourceGroup=='rg' and name='name'\", c, s)\nDelete the netapp volumes from the group 'rg' having the name 'name'\n\n>>> delete_netapp_volumes(\"where resourceGroup=='rg' | sample 2\", c, s)\nDelete two netapp volumes at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "count_netapp_volumes",
+      "mod": "chaosazure.netapp.probes",
+      "doc": "Return count of Azure netapp volumes.\n\nParameters\n----------\nfilter : str\n    Filter the netapp volumes. If the filter is omitted all netapp_volumes in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "describe_netapp_volumes",
+      "mod": "chaosazure.netapp.probes",
+      "doc": "Describe Azure netapp volumes.\n\nParameters\n----------\nfilter : str\n    Filter the netapp volumes. If the filter is omitted all netapp volumes in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_blob_containers",
+      "mod": "chaosazure.storage.actions",
+      "doc": "Delete blob containers at random.\n\n**Be aware**: Deleting a blob container is a invasive action. You will not be\nable to recover the blob container once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the storage account. If the filter is omitted all storage accounts in\n    the subscription will have their blob containers selected as potential chaos candidates.\nname_pattern : str, optional\n    Filter the blob containers. If the filter is omitted all blob containers will be selected\n    for the probe.\n    Pattern example:\n    'container[0-9]{3}'\nnumber : int, optional\n    Pick the number of blob containers matching the two filters that will be deleted. If the\n    number is omitted all blob containers in the list will be deleted.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_blob_containers(\"where resourceGroup=='rg'\", c, s)\nDelete all blob containers from the group 'rg'\n\n>>> delete_blob_containers(\"where resourceGroup=='rg' and name='name'\", c, s)\nDelete the blob containers from the group 'rg' under the storage account named 'name'\n\n>>> delete_blob_containers(\"where resourceGroup=='rg'\", \"chaos-*\", c, s)\nDelete the blob containers from the group 'rg' matching the \"chaos-*\" pattern\n\n>>> delete_blob_containers(\"where resourceGroup=='rg'\", \"chaos-*\", 3, c, s)\nDelete 3 blob containers at random from the group 'rg' matching the \"chaos-*\" pattern",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "name_pattern",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "number",
+          "default": null,
+          "type": "integer"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "action",
+      "name": "delete_storage_accounts",
+      "mod": "chaosazure.storage.actions",
+      "doc": "Delete storage accounts at random.\n\n**Be aware**: Deleting a storage account is a invasive action. You will not be\nable to recover the storage account once you deleted it.\n\nParameters\n----------\nfilter : str, optional\n    Filter the storage accounts. If the filter is omitted all storage accounts in\n    the subscription will be selected as potential chaos candidates.\n\nExamples\n--------\nSome calling examples. Deep dive into the filter syntax:\nhttps://docs.microsoft.com/en-us/azure/kusto/query/\n\n>>> delete_storage_accounts(\"where resourceGroup=='rg'\", c, s)\nDelete all storage accounts from the group 'rg'\n\n>>> delete_storage_accounts(\"where resourceGroup=='rg' and name='name'\", c, s)\nDelete the storage accounts from the group 'rg' having the name 'name'\n\n>>> delete_storage_accounts(\"where resourceGroup=='rg' | sample 2\", c, s)\nDelete two storage accounts at random from the group 'rg'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    },
+    {
+      "type": "probe",
+      "name": "count_blob_containers",
+      "mod": "chaosazure.storage.probes",
+      "doc": "Return count of Azure Blob Containers in filtered Storage account.\n\nParameters\n----------\nfilter : str\n    Filter the storage account. If the filter is omitted all blob containers in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "count_storage_accounts",
+      "mod": "chaosazure.storage.probes",
+      "doc": "Return count of Azure storage account.\n\nParameters\n----------\nfilter : str\n    Filter the storage account. If the filter is omitted all storage_accounts in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ],
+      "return_type": "integer"
+    },
+    {
+      "type": "probe",
+      "name": "describe_storage_accounts",
+      "mod": "chaosazure.storage.probes",
+      "doc": "Describe Azure storage account.\n\nParameters\n----------\nfilter : str\n    Filter the storage account. If the filter is omitted all storage account in\n    the subscription will be selected for the probe.\n    Filtering example:\n    'where resourceGroup==\"myresourcegroup\" and name=\"myresourcename\"'",
+      "arguments": [
+        {
+          "name": "filter",
+          "default": null,
+          "type": "string"
+        },
+        {
+          "name": "configuration",
+          "default": null,
+          "type": "mapping"
+        },
+        {
+          "name": "secrets",
+          "default": null,
+          "type": "mapping"
+        }
+      ]
+    }
+  ],
+  "system": null
+}

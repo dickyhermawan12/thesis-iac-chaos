@@ -1,0 +1,63 @@
+{
+  "title": "CT002 - Delete VM",
+  "description": "This experiment will delete the VMs in the VMSS",
+  "tags": [
+    "azure",
+    "vmss"
+  ],
+  "steady-state-hypothesis": {
+    "title": "Services are all available and healthy",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "web-must-still-respond",
+        "tolerance": 200,
+        "provider": {
+          "type": "http",
+          "url": "https://iac-thesis-microblog.australiacentral.cloudapp.azure.com/"
+        }
+      },
+      {
+        "type": "probe",
+        "name": "api-must-still-respond",
+        "tolerance": 200,
+        "provider": {
+          "type": "http",
+          "url": "https://iac-thesis-microblog.australiacentral.cloudapp.azure.com/api/"
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "delete-vm-web",
+      "provider": {
+        "type": "python",
+        "module": "chaosazure.vmss.actions",
+        "func": "delete_vmss",
+        "arguments": {
+          "filter": "where resourceGroup=='iac-thesis-rg' and name=='iac-thesis-web-vmss'"
+        }
+      },
+      "pauses": {
+        "after": 40
+      }
+    },
+    {
+      "type": "action",
+      "name": "delete-vm-app",
+      "provider": {
+        "type": "python",
+        "module": "chaosazure.vmss.actions",
+        "func": "delete_vmss",
+        "arguments": {
+          "filter": "where resourceGroup=='iac-thesis-rg' and name=='iac-thesis-app-vmss'"
+        }
+      },
+      "pauses": {
+        "after": 40
+      }
+    }
+  ]
+}

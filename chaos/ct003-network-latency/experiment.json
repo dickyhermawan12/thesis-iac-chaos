@@ -1,0 +1,71 @@
+{
+  "title": "CT003 - Network Latency",
+  "description": "This experiment will test the network latency between the two VMSS instances.",
+  "tags": [
+    "azure",
+    "vmss"
+  ],
+  "steady-state-hypothesis": {
+    "title": "Services are all available and healthy",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "web-must-still-respond",
+        "tolerance": 200,
+        "provider": {
+          "type": "http",
+          "url": "https://iac-thesis-microblog.australiacentral.cloudapp.azure.com/"
+        }
+      },
+      {
+        "type": "probe",
+        "name": "api-must-still-respond",
+        "tolerance": 200,
+        "provider": {
+          "type": "http",
+          "url": "https://iac-thesis-microblog.australiacentral.cloudapp.azure.com/api/"
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "network-latency-web",
+      "provider": {
+        "type": "python",
+        "module": "chaosazure.vmss.actions",
+        "func": "network_latency",
+        "arguments": {
+          "filter": "where resourceGroup=='iac-thesis-rg' and name=='iac-thesis-web-vmss'",
+          "duration": 600,
+          "delay": 200,
+          "jitter": 50,
+          "timeout": 60
+        }
+      },
+      "pauses": {
+        "after": 40
+      }
+    },
+    {
+      "type": "action",
+      "name": "network-latency-app",
+      "provider": {
+        "type": "python",
+        "module": "chaosazure.vmss.actions",
+        "func": "network_latency",
+        "arguments": {
+          "filter": "where resourceGroup=='iac-thesis-rg' and name=='iac-thesis-app-vmss'",
+          "duration": 600,
+          "delay": 200,
+          "jitter": 50,
+          "timeout": 60
+        }
+      },
+      "pauses": {
+        "after": 40
+      }
+    }
+  ]
+}

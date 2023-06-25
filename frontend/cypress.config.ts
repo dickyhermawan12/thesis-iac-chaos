@@ -2,7 +2,7 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    baseUrl: process.env.CYPRESS_BASE_URL || "http://localhost:3000",
+    baseUrl: "https://iac-thesis-microblog.australiacentral.cloudapp.azure.com",
     experimentalRunAllSpecs: true,
     setupNodeEvents(on, config) {
       // implement node event listeners here

@@ -6,7 +6,7 @@ Cypress.on('test:after:run', (attributes) => {
 
 describe('register', () => {
   before(() => {
-    cy.request('DELETE', 'http://localhost:8080/users')
+    cy.request('DELETE', 'https://iac-thesis-microblog.australiacentral.cloudapp.azure.com/api/users/')
     cy.visit('/')
     cy.get('#nav').contains('register').click()
   })
@@ -30,7 +30,7 @@ describe('register', () => {
   })
 
   it('check db', () => {
-    cy.request('http://localhost:8080/users/email?email=johndoe@test.mail')
+    cy.request('https://iac-thesis-microblog.australiacentral.cloudapp.azure.com/api/users/email?email=johndoe@test.mail')
       .should((response) => {
         expect(response.status).to.eq(200)
         expect(response.body).to.have.property('username', 'John Doe')
