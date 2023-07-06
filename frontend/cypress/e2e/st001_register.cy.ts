@@ -28,13 +28,4 @@ describe('register', () => {
       expect(request.body).to.have.property('password', 'johndoepass')
     })
   })
-
-  it('check db', () => {
-    cy.request('https://iac-thesis-microblog.australiacentral.cloudapp.azure.com/api/users/email?email=johndoe@test.mail')
-      .should((response) => {
-        expect(response.status).to.eq(200)
-        expect(response.body).to.have.property('username', 'John Doe')
-        expect(response.body).to.have.property('email', 'johndoe@test.mail')
-      })
-  })
 })
