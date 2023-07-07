@@ -1,7 +1,9 @@
 name: "Continuous Integration"
 run-name: "Unit testing for continuous integration"
 on: [push]
-
+defaults:
+  run:
+    working-directory: ./iac/live
 jobs:
   terra-ci-ut:
     name: "Unit test for terraform code"

@@ -7,20 +7,20 @@ on:
   pull_request:
     branches:
       - main
-
+defaults:
+  run:
+    working-directory: ./iac/live
 # permission for the workflow to access the repository
 permissions:
   id-token: write
   contents: read
   pull-requests: write
-
 # specify environment variables
 env:
   ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
   ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
   ARM_CLIENT_SECRET: "${{ secrets.AZURE_CLIENT_SECRET }}"
-
 jobs:
   terra-cd-plan:
     name: "Terraform Plan"
