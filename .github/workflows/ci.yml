@@ -12,7 +12,7 @@ env:
   ARM_CLIENT_SECRET: "${{ secrets.AZURE_CLIENT_SECRET }}"
 jobs:
   terra-ci-ut:
-    name: "Unit test for terraform code"
+    name: "Unit Testing"
     runs-on: ubuntu-latest
     steps:
       # repository checkout

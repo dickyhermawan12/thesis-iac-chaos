@@ -1,9 +1,6 @@
 name: "Continuous Delivery"
 run-name: "Plan and apply for continuous delivery"
-on:
-  push:
-    branches:
-      - main
+on: [push]
 defaults:
   run:
     working-directory: ./iac/live
@@ -44,6 +41,14 @@ jobs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
 
     steps:
+      # wait for ci to complete
+      - name: Wait for CI to complete
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: "Continuous Integration Unit Testing"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
       # repository checkout
       - name: Checkout
         uses: actions/checkout@v3
