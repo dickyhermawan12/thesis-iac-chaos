@@ -94,6 +94,8 @@ jobs:
       - name: Create String Output
         id: tf-plan-string
         run: |
+          delimiter="$(openssl rand -hex 8)"
+          echo "summary<<${delimiter}" >> $GITHUB_OUTPUT
           TERRAFORM_PLAN=$(terraform show -no-color tfplan)
           echo "## Terraform Plan Output" >> $GITHUB_OUTPUT
           echo "<details><summary>Click to expand</summary>" >> $GITHUB_OUTPUT
@@ -102,6 +104,7 @@ jobs:
           echo "$TERRAFORM_PLAN" >> $GITHUB_OUTPUT
           echo '```' >> $GITHUB_OUTPUT
           echo "</details>" >> $GITHUB_OUTPUT
+          echo "${delimiter}" >> $GITHUB_OUTPUT
 
       # publish terraform plan to task summary
       - name: Publish Terraform Plan to Task Summary
