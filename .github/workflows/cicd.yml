@@ -1,5 +1,5 @@
-name: "Continuous Delivery"
-run-name: "Plan and apply for continuous delivery"
+name: "Continuous Integration and Continuous Deployment"
+run-name: "Unit test, plan and apply Terraform configuration"
 on: [push]
 defaults:
   run:
@@ -31,6 +31,30 @@ env:
   TF_VAR_app_source_image_id: "${{ secrets.APP_SOURCE_IMAGE_ID }}"
 
 jobs:
+  terra-ci-ut:
+    name: "Unit Testing"
+    runs-on: ubuntu-latest
+    steps:
+      # repository checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # install terraform cli
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      # initialize working directory containing Terraform configuration files
+      - name: Terraform Init
+        run: terraform init
+
+      # validate configuration files
+      - name: Terraform Validate
+        run: terraform validate
+
+      # check formatting of configuration files
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
   terra-cd-plan:
     name: "Terraform Plan"
     runs-on: ubuntu-latest
@@ -41,14 +65,6 @@ jobs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
 
     steps:
-      # wait for ci to complete
-      - name: Wait for CI to complete
-        uses: lewagon/wait-on-check-action@v1.3.1
-        with:
-          ref: ${{ github.ref }}
-          check-name: "Continuous Integration Unit Testing"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
       # repository checkout
       - name: Checkout
         uses: actions/checkout@v3
