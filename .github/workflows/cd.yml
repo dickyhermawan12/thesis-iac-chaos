@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 defaults:
   run:
     working-directory: ./iac/live
@@ -14,7 +11,6 @@ defaults:
 permissions:
   id-token: write
   contents: read
-  pull-requests: write
 # specify environment variables
 env:
   ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
@@ -113,22 +109,6 @@ jobs:
         run: |
           echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
-      # post terraform plan to pull request
-      - name: Push Terraform Output to PR
-        if: github.ref != 'refs/heads/main'
-        uses: actions/github-script@v6
-        env:
-          SUMMARY: "${{ steps.tf-plan-string.outputs.summary }}"
-        with:
-          script: |
-            const body = `${process.env.SUMMARY}`;
-            github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: body
-            })
-
   terra-cd-apply:
     name: "Terraform Apply"
     if: github.ref == 'refs/heads/main' && needs.terra-cd-plan.outputs.tfplanExitCode == 2
@@ -152,6 +132,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: tfplan
+          path: ./iac/live
 
       # apply saved plan
       - name: Terraform Apply
