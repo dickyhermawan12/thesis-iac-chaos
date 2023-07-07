@@ -58,6 +58,7 @@ jobs:
   terra-cd-plan:
     name: "Terraform Plan"
     runs-on: ubuntu-latest
+    needs: [terra-ci-ut]
     env:
       # need to set this to prevent Terraform from prompting for input
       ARM_SKIP_PROVIDER_REGISTRATION: true
